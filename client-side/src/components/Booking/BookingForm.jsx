@@ -217,19 +217,19 @@ const CompleteBookingForm = () => {
                 </TableRow>
               </TableHead>
               <TableBody>
-                {appointments.map((appointment) => (
-                  <TableRow key={appointment._id}>
-                    <TableCell>{appointment.fullName}</TableCell>
-                    <TableCell>{appointment.phoneNumber}</TableCell>
-                    <TableCell>{appointment.gender}</TableCell>
-                    <TableCell>{appointment.age}</TableCell>
-                    <TableCell>{appointment.date}</TableCell>
-                    <TableCell>{appointment.time}</TableCell>
-                    <TableCell>{appointment.selectedService}</TableCell>
-                    <TableCell>{appointment.appointmentType}</TableCell>
-                    <TableCell>{appointment.bookFor}</TableCell>
-                  </TableRow>
-                ))}
+              {appointments && (
+  <TableRow key={appointments._id}>
+    <TableCell>{appointments.fullName}</TableCell>
+    <TableCell>{appointments.phoneNumber}</TableCell>
+    <TableCell>{appointments.gender}</TableCell>
+    <TableCell>{appointments.age}</TableCell>
+    <TableCell>{appointments.date}</TableCell>
+    <TableCell>{appointments.time}</TableCell>
+    <TableCell>{appointments.selectedService}</TableCell>
+    <TableCell>{appointments.appointmentType}</TableCell>
+    <TableCell>{appointments.bookFor}</TableCell>
+  </TableRow>
+         )}
               </TableBody>
             </Table>
           </TableContainer>

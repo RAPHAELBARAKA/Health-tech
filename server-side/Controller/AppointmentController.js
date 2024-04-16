@@ -26,20 +26,24 @@ exports.bookAppointment= async (req, res) => {
       res.status(500).json({ message: 'An error occurred while booking appointment' });
     }
   }
-
-exports.getUserAppointments = async (req, res) => {
-  try {
-    const { idNumber } = req.params;
-
-    // Find appointments based on the idNumber used for booking
-    const appointments = await Appointment.find({ idNumber });
-    res.status(200).json(appointments);
-  } catch (error) {
-    console.error('Error fetching appointments:', error);
-    res.status(500).json({ message: 'An error occurred while fetching appointments' });
-  }
-};
-
+  exports.getUserAppointments = async (req, res) => {
+    try {
+      const { idNumber } = req.params;
+  
+      // Find the most recent appointment based on the idNumber used for booking
+      const appointment = await Appointment.findOne({ idNumber }).sort({ createdAt: -1 }).limit(1);
+      
+      if (!appointment) {
+        return res.status(404).json({ message: 'No appointments found for the provided idNumber' });
+      }
+  
+      res.status(200).json(appointment);
+    } catch (error) {
+      console.error('Error fetching appointment:', error);
+      res.status(500).json({ message: 'An error occurred while fetching appointment' });
+    }
+  };
+  
 exports.getAdminAppointments = async (req, res) => {
   try {
     const appointments = await Appointment.find();
