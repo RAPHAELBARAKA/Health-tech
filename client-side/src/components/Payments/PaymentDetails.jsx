@@ -13,20 +13,33 @@ function PaymentDetails({ selectedService }) {
   });
 
   const [price, setPrice] = useState(null);
-  const [loading, setLoading] = useState(true); // Track loading state
-
+  const [loading, setLoading] = useState(true);
+  const [phoneNumber, setPhoneNumber] = useState('');
+  
   useEffect(() => {
-    fetchPrice(selectedService); // Fetch price when the selected service changes
+    fetchPrice(selectedService);
   }, [selectedService]);
 
   const fetchPrice = async (selectedService) => {
     try {
       const response = await axios.get(`http://localhost:3000/service-price/${selectedService}`);
-      setPrice(response.data.price); // Store only the price value
-      setLoading(false); // Update loading state
+      setPrice(response.data.price);
+      setLoading(false);
     } catch (error) {
       console.error('Error fetching price:', error);
-      setLoading(false); // Update loading state even if an error occurs
+      setLoading(false);
+    }
+  };
+
+  const initiatePayment = async () => {
+    try {
+      const response = await axios.post('http://localhost:3000/initiate-payment', {
+        phoneNumber,
+        amount: price
+      });
+      console.log(response.data);
+    } catch (error) {
+      console.error('Error initiating payment:', error);
     }
   };
 
@@ -64,14 +77,7 @@ function PaymentDetails({ selectedService }) {
             </h4>
             <h4>Service-Consultation</h4>
             <p style={{ fontSize: "12px", fontWeight: "bold" }}>Selected Service: {selectedService}</p>
-            <p style={{ fontSize: "12px", fontWeight: "bold" }}>Price: {loading ? 'Loading...' : (price !== null ? price : 'Price not available')}</p> {/* Display loading or price */}
-            <h4>Account Details</h4>
-            <p style={{ fontSize: "12px", fontWeight: "bold" }}>
-              PayBill : 247247
-            </p>
-            <p style={{ fontSize: "12px", fontWeight: "bold" }}>
-              Account Number : 247247
-            </p>
+            <p style={{ fontSize: "12px", fontWeight: "bold" }}>Price: {loading ? 'Loading...' : (price !== null ? price : 'Price not available')}</p>
 
             <TextField
               style={{
@@ -79,11 +85,14 @@ function PaymentDetails({ selectedService }) {
                 padding: "'5px' '0'",
                 color: "#c00100",
                 borderRadius: "15px",
-              }} // Set color to #c00100
-              label="Enter Reference Code"
+              }}
+              label="Enter Mpesa-phone number"
+              value={phoneNumber}
+              onChange={(e) => setPhoneNumber(e.target.value)}
             />
 
             <Button
+              onClick={initiatePayment}
               style={{
                 backgroundColor: "green",
                 color: "black",
@@ -93,7 +102,7 @@ function PaymentDetails({ selectedService }) {
                 marginTop: "10px",
               }}
             >
-              complete transaction
+              Complete Transaction
             </Button>
           </CardContent>
         </Card>
