@@ -1,7 +1,9 @@
+import React, { useState, useEffect } from 'react';
+import axios from 'axios';
 import { Button, Card, CardContent, TextField } from "@mui/material";
 import { createTheme, ThemeProvider } from "@mui/material/styles";
 
-function PaymentDetails() {
+function PaymentDetails({ selectedService }) {
   const theme = createTheme({
     palette: {
       primary: {
@@ -9,6 +11,24 @@ function PaymentDetails() {
       },
     },
   });
+
+  const [price, setPrice] = useState(null);
+  const [loading, setLoading] = useState(true); // Track loading state
+
+  useEffect(() => {
+    fetchPrice(selectedService); // Fetch price when the selected service changes
+  }, [selectedService]);
+
+  const fetchPrice = async (selectedService) => {
+    try {
+      const response = await axios.get(`http://localhost:3000/service-price/${selectedService}`);
+      setPrice(response.data.price); // Store only the price value
+      setLoading(false); // Update loading state
+    } catch (error) {
+      console.error('Error fetching price:', error);
+      setLoading(false); // Update loading state even if an error occurs
+    }
+  };
 
   return (
     <ThemeProvider theme={theme}>
@@ -43,7 +63,8 @@ function PaymentDetails() {
               Billing Information
             </h4>
             <h4>Service-Consultation</h4>
-            <p style={{ fontSize: "12px", fontWeight: "bold" }}>Amount : 500</p>
+            <p style={{ fontSize: "12px", fontWeight: "bold" }}>Selected Service: {selectedService}</p>
+            <p style={{ fontSize: "12px", fontWeight: "bold" }}>Price: {loading ? 'Loading...' : (price !== null ? price : 'Price not available')}</p> {/* Display loading or price */}
             <h4>Account Details</h4>
             <p style={{ fontSize: "12px", fontWeight: "bold" }}>
               PayBill : 247247

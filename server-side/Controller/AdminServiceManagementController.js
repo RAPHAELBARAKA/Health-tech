@@ -23,8 +23,8 @@ exports.addService = async (req, res) => {
 
 exports.fetchServices = async (req, res) => {
   try {
-    const services = await AdminServiceManagement.find();
-    console.log('Services:', services);
+  const services = await AdminServiceManagement.find();
+  console.log('Services:', services);
     res.json({ success: true, services });
   } catch (error) {
     console.error('Failed to fetch services:', error);

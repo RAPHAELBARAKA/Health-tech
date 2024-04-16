@@ -17,7 +17,6 @@ import ForgotPasswordPage from "../pages/UserPages/ForgotPasswordPage";
 import ModernLabPage from "../pages/ClientPages/ModernLabPage";
 import VerifypassOtpPage from '../pages/UserPages/VerifypassOtpPage'
 import BookAppointmentPage from "../pages/ClientPages/BookAppointmentPage";
-import CompleteAppointmentPage from "../pages/ClientPages/CompleteAppointmentPage";
 import AdminDashboardPage from "../pages/AdminPages/AdminDashboardPage";
 import AdminBookingPage from "../pages/AdminPages/AdminBookingPage";
 import DoctorRegistrationPage from '../pages/AdminPages/DoctorRegistrationPage'
@@ -25,6 +24,7 @@ import DoctorDashboardPage from "../pages/DoctorPages/DoctorDashboardPage";
 import DoctorAppointmentPage from "../pages/DoctorPages/DoctorAppointmentPage";
 import DoctorServicesPage from '../pages/AdminPages/AdminServicesPage'
 import AdminServicesPage from "../pages/AdminPages/AdminServicesPage";
+import ServicePaymentManagementpage from "../pages/AdminPages/ServicePaymentManagementpage";
 
 function AppRoutes() {
   return (
@@ -48,7 +48,6 @@ function AppRoutes() {
         <Route path="/modern-lab" element={<ModernLabPage />} />
         <Route path="/verify-passotp" element={< VerifypassOtpPage />} />
         <Route path="/book-appointment" element={<BookAppointmentPage />} />
-        <Route path="/complete-booking" element={<CompleteAppointmentPage />} />
         <Route path="/admin-dash" element={<AdminDashboardPage />} />
         <Route path="/admin-bookings" element={<AdminBookingPage />} />
         <Route path="/register-user" element={<DoctorRegistrationPage />} />
@@ -56,6 +55,7 @@ function AppRoutes() {
         <Route path="/doctor-appointment" element={<DoctorAppointmentPage />} />
         <Route path="/doctor-servicemanagement" element={<DoctorServicesPage />} />
         <Route path="/admin-servicemanagement" element={<AdminServicesPage />} />
+        <Route path="/servicepayment" element={<ServicePaymentManagementpage />} />
       </Routes>
     </Router>
   );

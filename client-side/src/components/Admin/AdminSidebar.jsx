@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from "react";
 import { List, ListItem, ListItemIcon, ListItemText, CssBaseline, IconButton } from "@mui/material";
-import { Dashboard, PeopleAlt, LocalHospital, MedicalServices, AssignmentInd, Assessment, Assignment, Fullscreen, FullscreenExit } from "@mui/icons-material";
+import { Dashboard, PeopleAlt, LocalHospital, MedicalServices, AssignmentInd, Assessment, Business, LocalHospitalOutlined, Fullscreen, FullscreenExit } from "@mui/icons-material";
 import { useNavigate } from "react-router-dom";
 import styled from "styled-components";
 
@@ -16,23 +16,28 @@ function AdminSidebar() {
     const navigate = useNavigate();
     const [brightnessMode, setBrightnessMode] = useState(false);
     const [fullscreenMode, setFullscreenMode] = useState(false);
-    const [loggedInUsersCount, setLoggedInUsersCount] = useState(0); // State to hold the number of logged-in users
+    const [loggedInUsersCount, setLoggedInUsersCount] = useState(0);
+    const [services, setServices] = useState([]);
+    const [chps, setChps] = useState([]);
+    const [doctors, setDoctors] = useState([]);
+    const [clinics, setClinics] = useState([]);
+    const [roles, setRoles] = useState([]);
 
     useEffect(() => {
         const fetchLoggedInUsers = async () => {
             try {
-                const endDate = new Date(); // Current date
+                const endDate = new Date();
                 const startDate = new Date();
-                startDate.setMonth(startDate.getMonth() - 3); // Three months ago
+                startDate.setMonth(startDate.getMonth() - 3);
     
-                const response = await axios.get('http://localhost:3000/login', {
+                const response = await axios.get('/login', {
                     params: {
                         startDate: startDate.toISOString(),
                         endDate: endDate.toISOString()
                     }
                 });
     
-                setLoggedInUsers(response.data.users);
+                setLoggedInUsersCount(response.data.users ? response.data.users.length : 0);
             } catch (error) {
                 console.error('Error fetching logged-in users:', error);
             }
@@ -40,7 +45,72 @@ function AdminSidebar() {
     
         fetchLoggedInUsers();
     }, []);
-       
+
+    useEffect(() => {
+        const fetchServices = async () => {
+            try {
+                const response = await axios.get('/services');
+                setServices(response.data.services || []);
+            } catch (error) {
+                console.error('Error fetching services:', error);
+            }
+        };
+
+        fetchServices();
+    }, []);
+    
+    useEffect(() => {
+      const fetchChps = async () => {
+          try {
+              const response = await axios.get('/chps');
+              setChps(response.data.chps || []);
+          } catch (error) {
+              console.error('Error fetching CHPS:', error);
+          }
+      };
+
+      fetchChps();
+    }, []);
+
+    useEffect(() => {
+      const fetchDoctors = async () => {
+          try {
+              const response = await axios.get('/doctors');
+              setDoctors(response.data.doctors || []);
+          } catch (error) {
+              console.error('Error fetching doctors:', error);
+          }
+      };
+
+      fetchDoctors();
+    }, []);
+
+    useEffect(() => {
+      const fetchClinics = async () => {
+          try {
+              const response = await axios.get('/clinics');
+              setClinics(response.data.clinics || []);
+          } catch (error) {
+              console.error('Error fetching clinics:', error);
+          }
+      };
+
+      fetchClinics();
+    }, []);
+
+    useEffect(() => {
+      const fetchRoles = async () => {
+          try {
+              const response = await axios.get('/roles');
+              setRoles(response.data.roles || []);
+          } catch (error) {
+              console.error('Error fetching roles:', error);
+          }
+      };
+
+      fetchRoles();
+    }, []);
+
     const handleNavigation = (route) => {
         if (route === '/light-mode') {
             setBrightnessMode(!brightnessMode);
@@ -88,23 +158,23 @@ function AdminSidebar() {
             </ListItemIcon>
             <ListItemText primary={`Users (${loggedInUsersCount})`} />
           </StyledListItem>
-          <StyledListItem button onClick={() => handleNavigation("/services")}>
+          <StyledListItem button onClick={() => handleNavigation("/admin-servicemanagement")}>
             <ListItemIcon sx={{ color: brightnessMode ? "#000000" : "white", marginRight: -3 }}>
               <MedicalServices />
             </ListItemIcon>
-            <ListItemText primary="Services" />
+            <ListItemText primary={`Services (${services.length})`} />
           </StyledListItem>
           <StyledListItem button onClick={() => handleNavigation("/chps")}>
             <ListItemIcon sx={{ color: brightnessMode ? "#000000" : "white", marginRight: -3 }}>
               <LocalHospital />
             </ListItemIcon>
-            <ListItemText primary="CHPS" />
+            <ListItemText primary={`CHPS (${chps.length})`} />
           </StyledListItem>
           <StyledListItem button onClick={() => handleNavigation("/doctors")}>
             <ListItemIcon sx={{ color: brightnessMode ? "#000000" : "white", marginRight: -3 }}>
               <AssignmentInd />
             </ListItemIcon>
-            <ListItemText primary="Doctors" />
+            <ListItemText primary={`Doctors (${doctors.length})`} />
           </StyledListItem>
           <StyledListItem button onClick={() => handleNavigation("/reports")}>
             <ListItemIcon sx={{ color: brightnessMode ? "#000000" : "white", marginRight: -3 }}>
@@ -114,15 +184,15 @@ function AdminSidebar() {
           </StyledListItem>
           <StyledListItem button onClick={() => handleNavigation("/clinics")}>
             <ListItemIcon sx={{ color: brightnessMode ? "#000000" : "white", marginRight: -3 }}>
-              <Assignment />
+              <Business />
             </ListItemIcon>
-            <ListItemText primary="Clinics" />
+            <ListItemText primary={`Clinics (${clinics.length})`} />
           </StyledListItem>
           <StyledListItem button onClick={() => handleNavigation("/roles")}>
             <ListItemIcon sx={{ color: brightnessMode ? "#000000" : "white", marginRight: -3 }}>
-              <Assignment />
+              <LocalHospitalOutlined />
             </ListItemIcon>
-            <ListItemText primary="Roles" />
+            <ListItemText primary={`Roles (${roles.length})`} />
           </StyledListItem>
         </List>
       </>

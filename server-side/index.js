@@ -24,7 +24,7 @@ const upload = multer({ storage: storage });
 const UserController = require('./Controller/UserController');
 const AppointmentController = require('./Controller/AppointmentController');
 const AdminServiceManagementController = require('./Controller/AdminServiceManagementController');
-
+const PaymentController = require ("./Controller/PaymentController")
 // Middleware
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
@@ -52,12 +52,16 @@ app.post('/book-appointment', AppointmentController.bookAppointment);
 app.get('/admin-appointments', AppointmentController.getAdminAppointments);
 app.put('/approve-appointment/:id', AppointmentController.approveAppointment);
 app.put('/decline-appointment/:id', AppointmentController.declineAppointment);
-
+app.get('/user/:idNumber/appointments', AppointmentController.getUserAppointments);
 // Admin Service Management routes
 app.post('/add-service', upload.single('image'), AdminServiceManagementController.addService); // Use upload middleware
 app.get('/fetch-services', AdminServiceManagementController.fetchServices);
 app.delete('/delete-service/:id', AdminServiceManagementController.deleteService);
 app.put('/edit-service/:id', AdminServiceManagementController.editService);
+
+//service payment
+app.post('/servicepayment',PaymentController.servicePrice);
+app.get('/service-price/:selectedService',PaymentController.getServicePrice);
 // Start the server
 const PORT = process.env.PORT || 3000;
 app.listen(PORT, () => {

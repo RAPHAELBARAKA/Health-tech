@@ -46,7 +46,15 @@ const newSchema = new mongoose.Schema({
         type: String,
         enum: ['user', 'admin', 'doctor'],
         default: 'user' // Set default value to 'user'
-    }
+    },
+    loginRecords: [
+        {
+            loginTime: {
+                type: Date,
+                required: true
+            }
+        }
+    ]
 });
 
 const collection = mongoose.model("collection", newSchema);

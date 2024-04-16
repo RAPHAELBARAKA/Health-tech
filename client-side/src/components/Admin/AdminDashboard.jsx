@@ -13,6 +13,9 @@ function AdminDashboard() {
   const handleNavigateToServiceManagement = () => {
     navigate('/admin-servicemanagement'); // Replace '/bookings' with the actual path to your bookings page
   };
+ const handleNavigateToServicePayment = () => {
+  navigate('/servicepayment');
+};
 
   return (
     <div>
@@ -25,8 +28,9 @@ function AdminDashboard() {
         {/* Add more items as needed */}
       </ul>
       <button onClick={handleNavigateToBookings}>Go to Bookings</button><br/><br/>
-      <button onClick={handleNavigateToRegistration }>Register a User</button>
-      <button onClick={handleNavigateToServiceManagement }>Service management</button>
+      <button onClick={handleNavigateToRegistration }>Register a User</button><br/><br/>
+      <button onClick={handleNavigateToServiceManagement }>Service management</button><br/><br/>
+      <button onClick={handleNavigateToServicePayment }>Service payment</button>
     </div>
   );
 }

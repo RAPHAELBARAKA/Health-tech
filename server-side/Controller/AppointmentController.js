@@ -1,32 +1,42 @@
 // AppointmentController.js
-
 const Appointment = require("../Model/Appointment");
 
 exports.bookAppointment = async (req, res) => {
   try {
-    // Destructure the data from the request body
-    const { bookFor, selectedService, date, time, appointmentType, fullName, phoneNumber, gender, age } = req.body;
+    const { selectedService, date, time, appointmentType,bookFor, fullName, phoneNumber, gender, idNumber, age } = req.body;
 
-    // Create a new appointment instance
     const newAppointment = new Appointment({
-      bookFor,
       selectedService,
       date,
       time,
       appointmentType,
       fullName,
+      bookFor,
       phoneNumber,
       gender,
+      idNumber,
       age
     });
 
-    // Save the appointment to the database
     await newAppointment.save();
 
     res.status(201).json({ message: 'Appointment booked successfully' });
   } catch (error) {
     console.error('Error booking appointment:', error);
     res.status(500).json({ message: 'An error occurred while booking appointment' });
+  }
+};
+
+exports.getUserAppointments = async (req, res) => {
+  try {
+    const { idNumber } = req.params;
+
+    // Find appointments based on the idNumber used for booking
+    const appointments = await Appointment.find({ idNumber });
+    res.status(200).json(appointments);
+  } catch (error) {
+    console.error('Error fetching appointments:', error);
+    res.status(500).json({ message: 'An error occurred while fetching appointments' });
   }
 };
 
@@ -72,4 +82,3 @@ exports.declineAppointment = async (req, res) => {
     res.status(500).json({ message: 'An error occurred while declining appointment' });
   }
 };
-

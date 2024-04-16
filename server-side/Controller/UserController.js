@@ -159,6 +159,10 @@ exports.loginUser = async (req, res) => {
         // Assuming doctor role is 'doctor'
         return res.status(200).json({ message: 'Doctor login successful', isDoctor: true });
       } else {
+        // Update the user's loginRecords with the current login time
+        user.loginRecords.push({ loginTime: new Date() });
+        await user.save();
+
         return res.status(200).json({ message: 'Login successful', isAdmin: false, isDoctor: false });
       }
     } else {
@@ -169,6 +173,7 @@ exports.loginUser = async (req, res) => {
     res.status(500).json({ message: 'An error occurred during login' });
   }
 };
+
 
 
 exports.sendPasswordOTP = async (req, res) => {

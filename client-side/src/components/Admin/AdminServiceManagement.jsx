@@ -7,6 +7,8 @@ const AdminServiceManagement = () => {
   const [serviceName, setServiceName] = useState('');
   const [editServiceName, setEditServiceName] = useState('');
   const [editServiceId, setEditServiceId] = useState('');
+  const [loading, setLoading] = useState(true); // New state for loading indicator
+  const [error, setError] = useState(null); // New state for error handling
 
   useEffect(() => {
     fetchServices();
@@ -15,9 +17,11 @@ const AdminServiceManagement = () => {
   const fetchServices = async () => {
     try {
       const response = await axios.get('http://localhost:3000/fetch-services');
-      setServices(response.data.services);
+      setServices(response.data.services || []); // Set services or an empty array if undefined
+      setLoading(false); // Set loading to false when data is fetched successfully
     } catch (error) {
-      console.error('Failed to fetch services:', error);
+      setError(error); // Set error state if request fails
+      setLoading(false); // Set loading to false in case of error
     }
   };
 
@@ -58,8 +62,8 @@ const AdminServiceManagement = () => {
     try {
       await axios.post('http://localhost:3000/add-service', formData, {
         headers: {
-          'Content-Type': 'multipart/form-data'
-        }
+          'Content-Type': 'multipart/form-data',
+        },
       });
       alert('Service uploaded successfully');
       fetchServices(); // Refresh the service gallery after upload
@@ -80,6 +84,16 @@ const AdminServiceManagement = () => {
     }
   };
 
+  // Display loading indicator if data is being fetched
+  if (loading) {
+    return <p>Loading services...</p>;
+  }
+
+  // Display error message if request fails
+  if (error) {
+    return <p>Error: {error.message}</p>;
+  }
+
   return (
     <div>
       <h2>Service Management</h2>
@@ -91,16 +105,24 @@ const AdminServiceManagement = () => {
       </div>
       <div>
         <h3>Service Gallery</h3>
-        <div style={{ display: 'flex', flexWrap: 'wrap', justifyContent: 'space-between' }}>
-          {services.map((service, index) => (
-            <div key={index} style={{ flex: '0 1 calc(33.33% - 10px)', marginBottom: '20px' }}>
-              <img src={`http://localhost:3000/${service.image}`} alt={`Service ${index}`} style={{ width: '100%' }} />
-              <p style={{ textAlign: 'center' }}>{service.name}</p>
-              <button onClick={() => handleEdit(service._id, service.name)}>Edit</button>
-              <button onClick={() => handleDelete(service._id)}>Delete</button>
-            </div>
-          ))}
-        </div>
+        {services.length > 0 ? (
+          <div style={{ display: 'flex', flexWrap: 'wrap', justifyContent: 'space-between' }}>
+            {services.map((service, index) => (
+              <div key={index} style={{ flex: '0 1 calc(33.33% - 10px)', marginBottom: '20px' }}>
+                {service && (
+                  <>
+                    <img src={`http://localhost:3000/${service.image}`} alt={`Service ${index}`} style={{ width: '100%' }} />
+                    <p style={{ textAlign: 'center' }}>{service.name}</p>
+                    <button onClick={() => handleEdit(service._id, service.name)}>Edit</button>
+                    <button onClick={() => handleDelete(service._id)}>Delete</button>
+                  </>
+                )}
+              </div>
+            ))}
+          </div>
+        ) : (
+          <p>No services available.</p>
+        )}
       </div>
       {/* Edit Service Form */}
       {editServiceId && (
