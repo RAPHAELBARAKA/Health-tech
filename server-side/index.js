@@ -62,6 +62,14 @@ app.put('/edit-service/:id', AdminServiceManagementController.editService);
 //service payment
 app.post('/servicepayment',PaymentController.servicePrice);
 app.get('/service-price/:selectedService',PaymentController.getServicePrice);
+app.post('/initiate-payment', PaymentController.initiatepayment);
+
+app.post('/callback', (req, res) => {
+  // Handle the callback data here
+  console.log('Safaricom API callback received:', req.body);
+  // Send a response to confirm receipt of the callback
+  res.json({ message: 'Callback received successfully' });
+});
 // Start the server
 const PORT = process.env.PORT || 3000;
 app.listen(PORT, () => {

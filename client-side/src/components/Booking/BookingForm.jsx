@@ -32,6 +32,7 @@ const CompleteBookingForm = () => {
   const fetchAppointments = async () => {
     try {
       const response = await axios.get(`http://localhost:3000/user/${formData.idNumber}/appointments`);
+      console.log(response)
       setAppointments(response.data);
       setIsFetched(true);
       setProceedToPayment(true);

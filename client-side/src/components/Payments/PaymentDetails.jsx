@@ -15,7 +15,7 @@ function PaymentDetails({ selectedService }) {
   const [price, setPrice] = useState(null);
   const [loading, setLoading] = useState(true);
   const [phoneNumber, setPhoneNumber] = useState('');
-  
+
   useEffect(() => {
     fetchPrice(selectedService);
   }, [selectedService]);
@@ -31,16 +31,23 @@ function PaymentDetails({ selectedService }) {
     }
   };
 
-  const initiatePayment = async () => {
-    try {
-      const response = await axios.post('http://localhost:3000/initiate-payment', {
-        phoneNumber,
-        amount: price
-      });
-      console.log(response.data);
-    } catch (error) {
-      console.error('Error initiating payment:', error);
-    }
+  const initiatePayment = () => {
+    // Call backend API to initiate M-Pesa STK Push payment
+    axios.post('http://localhost:3000/initiate-payment', {
+      phoneNumber: phoneNumber,
+      amount: price
+    })
+    .then(response => {
+      // Handle success response from the backend
+      console.log('Payment initiation successful:', response.data);
+  
+      // Handle further action as required
+    })
+    .catch(error => {
+      // Handle error response from the backend
+      console.error('Error initiating M-Pesa payment:', error);
+      alert('Failed to initiate M-Pesa payment. Please try again.');
+    });
   };
 
   return (
@@ -102,7 +109,7 @@ function PaymentDetails({ selectedService }) {
                 marginTop: "10px",
               }}
             >
-              Complete Transaction
+              Pay with M-Pesa
             </Button>
           </CardContent>
         </Card>
